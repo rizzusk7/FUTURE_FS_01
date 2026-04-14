@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rizwana Portfolio</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            transition: 0.3s;
+        }
+
+        .dark {
+            background: #111;
+            color: white;
+        }
+
+        nav {
+            background: #222;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 15px;
+            text-decoration: none;
+        }
+
+        .home {
+            background: linear-gradient(blue, purple);
+            color: white;
+            text-align: center;
+            padding: 100px;
+        }
+
+        section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .skill {
+            display: inline-block;
+            background: blue;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+        }
+
+        .project {
+            background: #f4f4f4;
+            margin: 10px auto;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 0 5px gray;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: black;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <button onclick="toggleTheme()">🌙</button>
+</nav>
+
+<!-- Home -->
+<section class="home" id="home">
+    <h1>Hello, I'm Rizwana Shaik</h1>
+    <p>Full Stack Web Development Intern</p>
+    <button onclick="goContact()">Contact Me</button>
+</section>
+
+<!-- About -->
+<section id="about">
+    <h2>About Me</h2>
+    <p>I am passionate about building modern web applications.</p>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+    <h2>Skills</h2>
+
+    <div class="skill">HTML</div>
+    <div class="skill">CSS</div>
+    <div class="skill">JavaScript</div>
+    <div class="skill">GitHub</div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+    <h2>Projects</h2>
+
+    <input type="text" id="projectName" placeholder="Project Name">
+    <button onclick="addProject()">Add Project</button>
+
+    <div id="projectList"></div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+    <h2>Contact Me</h2>
+
+    <input type="text" id="name" placeholder="Your Name"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+
+    <button onclick="sendMsg()">Send</button>
+
+    <h3>Messages</h3>
+    <div id="messages"></div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 Rizwana Shaik</p>
+</footer>
+
+<script>
+
+// 🌙 Dark Mode Toggle
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+}
+
+// Smooth Scroll
+function goContact() {
+    document.getElementById("contact").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+// 📌 Add Project (Dynamic)
+function addProject() {
+    let name = document.getElementById("projectName").value;
+
+    if(name === "") return;
+
+    let projects = JSON.parse(localStorage.getItem("projects")) || [];
+    projects.push(name);
+
+    localStorage.setItem("projects", JSON.stringify(projects));
+
+    loadProjects();
+}
+
+// Load Projects
+function loadProjects() {
+    let projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+    let list = document.getElementById("projectList");
+    list.innerHTML = "";
+
+    projects.forEach((p, index) => {
+        let div = document.createElement("div");
+        div.className = "project";
+
+        div.innerHTML = `
+            ${p}
+            <br>
+            <button onclick="deleteProject(${index})">Delete</button>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+// Delete Project
+function deleteProject(index) {
+    let projects = JSON.parse(localStorage.getItem("projects"));
+    projects.splice(index, 1);
+
+    localStorage.setItem("projects", JSON.stringify(projects));
+    loadProjects();
+}
+
+// 📩 Contact Form (Save Messages)
+function sendMsg() {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+
+    if(name === "" || email === "") {
+        alert("Fill all fields");
+        return;
+    }
+
+    let msgs = JSON.parse(localStorage.getItem("messages")) || [];
+    msgs.push({name, email});
+
+    localStorage.setItem("messages", JSON.stringify(msgs));
+
+    loadMessages();
+
+    alert("Message Sent!");
+}
+
+// Load Messages
+function loadMessages() {
+    let msgs = JSON.parse(localStorage.getItem("messages")) || [];
+
+    let box = document.getElementById("messages");
+    box.innerHTML = "";
+
+    msgs.forEach(m => {
+        let p = document.createElement("p");
+        p.innerText = m.name + " - " + m.email;
+        box.appendChild(p);
+    });
+}
+
+// Load on start
+loadProjects();
+loadMessages();
+
+</script>
+
+</body>
+</html>
